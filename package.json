@@ -1,7 +1,7 @@
 {
   "name": "rkajs",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "module": "dist/index.js",
   "main": "dist/index.cjs",
@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsup",
-    "release": "bumpp && pnpm publish",
+    "release": "bumpp && pnpm publish --no-git-checks",
     "prepublishOnly": "pnpm run build"
   },
   "peerDependencies": {
