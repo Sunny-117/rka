@@ -10,7 +10,8 @@
     "build": "tsup",
     "release": "bumpp && pnpm publish --no-git-checks",
     "prepublishOnly": "pnpm run build",
-    "example": "cd example && pnpm dev"
+    "example": "cd example && pnpm dev",
+    "postinstall": "pnpm run build"
   },
   "peerDependencies": {
     "react": "^17.0.0"
