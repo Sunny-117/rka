@@ -1,6 +1,6 @@
 {
   "name": "rkajs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Package will allow components to maintain their status, to avoid repeated re-rendering.",
   "type": "module",
   "module": "dist/index.js",
