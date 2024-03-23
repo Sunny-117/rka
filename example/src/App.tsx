@@ -1,7 +1,7 @@
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Form from "./pages/Form";
-import { KeepAlive, KeepAliveTransfer } from "./core";
+import { KeepAlive, KeepAliveTransfer } from "rkajs";
 
 const AliveHomeView = KeepAliveTransfer(Home, "home");
 const AliveFormView = KeepAliveTransfer(Form, "form");

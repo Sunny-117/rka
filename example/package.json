@@ -1,19 +1,18 @@
 {
-  "name": "rkajs",
-  "version": "0.0.3",
-  "description": "Package will allow components to maintain their status, to avoid repeated re-rendering.",
+  "name": "example",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "module": "dist/index.js",
-  "main": "dist/index.cjs",
-  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
-    "release": "bumpp && pnpm publish --no-git-checks",
-    "prepublishOnly": "pnpm run build",
-    "example": "cd example && pnpm dev"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
-  "peerDependencies": {
-    "react": "^17.0.0"
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rkajs": "^0.0.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
@@ -21,7 +20,6 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
-    "bumpp": "^9.4.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
