@@ -1,24 +1,33 @@
-import { Dispatch, ReactElement, createContext } from "react";
+import { createContext, ReactElement } from "react";
 
-type StatusType = 'CREATING' | 'CREATED'
+import * as actionTypes from "./actionTypes";
+
+// StatusType mirrors the reducer action phases so consumers can react to cache state if needed.
+export type StatusType =
+  | typeof actionTypes.CREATING
+  | typeof actionTypes.CREATED
+  | typeof actionTypes.REFRESHING
+  | typeof actionTypes.DROPPED;
 
 export interface KeepAliveStatesType {
-    keepAliveId: string;
-    reactElement?: ReactElement; // use to first render
-    status?: StatusType;
-    nodes?: null | ChildNode[]; // cache
+  keepAliveId: string;
+  reactElement: ReactElement | null;
+  status: StatusType;
+  nodes: ChildNode[] | null;
+  version: number;
 }
 
-export interface KeepAliveStateParams {
-    keepAliveId: string;
-    reactElement: ReactElement;
+export interface KeepAliveRegisterParams {
+  keepAliveId: string;
+  reactElement: ReactElement;
 }
-interface KeepAliveContextType {
-    keepAliveStates: Record<string, KeepAliveStatesType>;
-    setKeepAliveState: ({ keepAliveId, reactElement }: KeepAliveStateParams) => void
-    dispatch: Dispatch<{
-        type: StatusType;
-        payload: KeepAliveStatesType
-    }>
+
+export interface KeepAliveContextType {
+  keepAliveStates: Record<string, KeepAliveStatesType>;
+  register: (params: KeepAliveRegisterParams) => void;
+  drop: (keepAliveId: string) => void;
+  refresh: (keepAliveId: string) => void;
 }
-export const KeepAliveContext = createContext<KeepAliveContextType>({} as KeepAliveContextType)
+
+// The context starts as null so hooks can throw descriptive errors when misused outside the provider.
+export const KeepAliveContext = createContext<KeepAliveContextType | null>(null);

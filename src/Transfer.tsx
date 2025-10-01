@@ -1,30 +1,57 @@
-import { FC, useContext, useEffect, useRef } from "react";
+import { FC, useContext, useEffect, useMemo, useRef } from "react";
+
 import { KeepAliveContext } from "./context";
 
-const KeepAliveTransfer = (KeepAliveComponent: FC, keepAliveId: string) => {
-  return function WrapperComponent(props: Record<string, unknown>) {
-    const _ref = useRef<HTMLDivElement | null>(null);
-    const { keepAliveStates, setKeepAliveState } = useContext(KeepAliveContext);
+const KeepAliveTransfer = <P extends Record<string, unknown>>(
+  KeepAliveComponent: FC<P>,
+  keepAliveId: string
+) => {
+  const displayName =
+    KeepAliveComponent.displayName ||
+    KeepAliveComponent.name ||
+    "KeepAliveWrappedComponent";
+
+  // WrapperComponent attaches the cached DOM fragment to whichever tree re-mounts it.
+  const WrapperComponent: FC<P> = (props) => {
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const context = useContext(KeepAliveContext);
+
+    if (!context) {
+      throw new Error("KeepAliveTransfer must be used within <KeepAlive>");
+    }
+
+    const { keepAliveStates, register } = context;
+
+    const reactElement = useMemo(
+      () => <KeepAliveComponent {...props} />,
+      [props]
+    );
 
     useEffect(() => {
       const state = keepAliveStates[keepAliveId];
-      if (state && state.nodes) {
-        if (Array.isArray(state.nodes)) {
-          state.nodes.forEach((node) => {
-            if (_ref.current) {
-              _ref.current.appendChild(node);
-            }
-          });
-        }
+
+      if (state?.nodes && containerRef.current) {
+        // Re-parent cached DOM nodes into the live container without rerendering.
+        state.nodes.forEach((node) => {
+          if (containerRef.current && node.parentNode !== containerRef.current) {
+            containerRef.current.appendChild(node);
+          }
+        });
       } else {
-        setKeepAliveState({
-          reactElement: <KeepAliveComponent {...props} />,
+        // First mount: register the element so the provider can create and retain its nodes.
+        register({
           keepAliveId,
+          reactElement,
         });
       }
-    }, [keepAliveStates, props, setKeepAliveState]);
-    return <div ref={_ref}></div>;
+    }, [keepAliveStates, reactElement, register]);
+
+    return <div ref={containerRef} />;
   };
+
+  WrapperComponent.displayName = `KeepAliveTransfer(${displayName})`;
+
+  return WrapperComponent;
 };
 
 export { KeepAliveTransfer };

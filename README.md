@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/sunny-117/rka">
-    <img width="100%" src="./assets/logo.png">
+    <img width="100%" src="./assets/logo.svg" alt="rkajs logo">
   </a>
 </p>
 
@@ -13,6 +13,7 @@
 - You can easily use `<KeepAlive>` to wrap your components to keep them alive.
 - Because it is not controlled by `display: none | block`, you can use animation.
 - Ability to manually control whether your components need to stay active.
+- Programmatic cache lifecycle control through the new `useKeepAlive` hook.
 
 ## 📦 Installation
 
@@ -30,7 +31,7 @@ bun i rkajs
 ![views](./assets/views.gif)
 
 ```tsx
-import { KeepAlive, KeepAliveTransfer } from "rkajs";
+import { KeepAlive, KeepAliveTransfer, useKeepAlive } from "rkajs";
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Form from "./pages/Form";
@@ -38,11 +39,23 @@ import Form from "./pages/Form";
 const AliveHomeView = KeepAliveTransfer(Home, "home");
 const AliveFormView = KeepAliveTransfer(Form, "form");
 
+function Controls() {
+  const { refresh, drop } = useKeepAlive();
+
+  return (
+    <div>
+      <button onClick={() => refresh("home")}>Refresh home</button>
+      <button onClick={() => drop("form")}>Drop form cache</button>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <KeepAlive>
         <div>
+          <Controls />
           <ul>
             <li>
               <Link to={"/"}>Home</Link>
@@ -66,6 +79,8 @@ export default function App() {
   );
 }
 ```
+
+> `useKeepAlive` must be called from a descendant of `<KeepAlive>`.
 
 ## 💡 Why do you need this component?
 
