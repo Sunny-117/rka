@@ -1,5 +1,6 @@
 import { FC, useContext, useEffect, useMemo, useRef } from "react";
 
+import * as actionTypes from "./actionTypes";
 import { KeepAliveContext } from "./context";
 
 const KeepAliveTransfer = <P extends Record<string, unknown>>(
@@ -29,6 +30,10 @@ const KeepAliveTransfer = <P extends Record<string, unknown>>(
 
     useEffect(() => {
       const state = keepAliveStates[keepAliveId];
+
+      if (containerRef.current && state?.status !== actionTypes.CREATED) {
+        containerRef.current.textContent = "";
+      }
 
       if (state?.nodes && containerRef.current) {
         // Re-parent cached DOM nodes into the live container without rerendering.
