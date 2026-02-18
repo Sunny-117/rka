@@ -8,6 +8,7 @@
   "types": "dist/index.d.mts",
   "scripts": {
     "build": "robuild",
+    "dev": "robuild --watch",
     "release": "bumpp && pnpm publish --no-git-checks",
     "prepublishOnly": "pnpm run build",
     "example": "cd example && pnpm dev",
