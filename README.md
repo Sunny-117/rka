@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/sunny-117/rka">
-    <img width="100%" src="./assets/logo.svg" alt="rkajs logo">
+    <img width="200" src="./assets/logo.svg" alt="rkajs logo">
   </a>
 </p>
 
